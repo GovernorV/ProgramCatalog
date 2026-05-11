@@ -348,7 +348,10 @@ footer{
     {
   id: "dbsearch",
   glyph: "DB",
-  cover: "dbsearch_banner.png",
+  cover: {
+    ru: "dbsearch_banner.png",
+    en: "dbsearch_banner_en.png"
+  },
   gradient: ["#79ffd2", "#6aa9ff"],
   titles: {
     ru: "Поисковая система по базам данных",
@@ -388,7 +391,10 @@ footer{
     {
       id: "licman",
       glyph: "LM",
-      cover: "licman_banner.png",
+      cover: {
+        ru: "licman_banner.png",
+        en: "licman_banner_en.png"
+      },
       gradient: ["#6aa9ff", "#d9e8ff"],
       titles: {
         ru: "Менеджер лицензий",
@@ -428,7 +434,10 @@ footer{
     {
       id: "boxpalletizer",
       glyph: "BP",
-      cover: "palletizer_banner.png",
+      cover: {
+        ru: "palletizer_banner.png",
+        en: "palletizer_banner_en.png"
+      },
       gradient: ["#6aa9ff", "#79ffd2"],
       titles: {
         ru: "Box Palletizer",
@@ -468,7 +477,10 @@ footer{
     {
       id: "boxpricecalculator",
       glyph: "BC",
-      cover: "boxprice_banner.png",
+      cover: {
+        ru: "boxprice_banner.png",
+        en: "boxprice_banner_en.png"
+      },
       gradient: ["#ffd36a", "#79ffd2"],
       titles: {
         ru: "Box Price Calculator",
@@ -685,7 +697,7 @@ if (p.cover) {
   coverLink.className = "productCover";
 
   const img = document.createElement("img");
-  img.src = p.cover;
+  img.src = typeof p.cover === "string" ? p.cover : (p.cover[lang] || p.cover.ru);
   img.alt = p.titles[lang] + " — software overview";
 
   coverLink.appendChild(img);
