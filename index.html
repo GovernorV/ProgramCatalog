@@ -199,6 +199,12 @@ hr.sep{
   flex:0 0 auto;
   overflow:hidden;
 }
+.productIcon img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
 .productIcon .glyph{
   width:100%;
   height:100%;
@@ -383,6 +389,7 @@ footer{
     {
   id: "dbsearch",
   glyph: "DB",
+  icon: "icon_dbsearch.ico",
   cover: {
     ru: "dbsearch_banner.png",
     en: "dbsearch_banner_en.png"
@@ -426,6 +433,7 @@ footer{
     {
       id: "licman",
       glyph: "LM",
+      icon: "icon_licman.ico",
       cover: {
         ru: "licman_banner.png",
         en: "licman_banner_en.png"
@@ -469,6 +477,7 @@ footer{
     {
       id: "boxpalletizer",
       glyph: "BP",
+      icon: "icon_boxpalletizer.ico",
       cover: {
         ru: "palletizer_banner.png",
         en: "palletizer_banner_en.png"
@@ -512,6 +521,7 @@ footer{
     {
       id: "boxpricecalculator",
       glyph: "BC",
+      icon: "icon_boxpricecalculator.ico",
       cover: {
         ru: "boxprice_banner.png",
         en: "boxprice_banner_en.png"
@@ -699,14 +709,22 @@ footer{
       const icon = document.createElement("div");
       icon.className = "productIcon";
 
-      const glyph = document.createElement("div");
-      glyph.className = "glyph";
-      const g1 = p.gradient[0];
-      const g2 = p.gradient[1];
-      glyph.style.background = `linear-gradient(135deg, ${g1}, ${g2})`;
-      glyph.textContent = p.glyph;
+      if (p.icon) {
+        const iconImg = document.createElement("img");
+        iconImg.src = p.icon;
+        iconImg.alt = "";
+        iconImg.loading = "lazy";
+        icon.appendChild(iconImg);
+      } else {
+        const glyph = document.createElement("div");
+        glyph.className = "glyph";
+        const g1 = p.gradient[0];
+        const g2 = p.gradient[1];
+        glyph.style.background = `linear-gradient(135deg, ${g1}, ${g2})`;
+        glyph.textContent = p.glyph;
 
-      icon.appendChild(glyph);
+        icon.appendChild(glyph);
+      }
 
       const titleWrap = document.createElement("div");
       titleWrap.className = "productTitleWrap";
