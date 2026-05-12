@@ -8,15 +8,39 @@
 
 <style>
 :root{
+  color-scheme: light dark;
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --cardSoft:#f8fbff;
+  --line:rgba(16,30,55,.14);
+  --text:#152033;
+  --muted:#52627a;
+  --topbar:rgba(244,247,251,.86);
+  --soft:rgba(16,30,55,.04);
+  --coverBg:#e8eef7;
+  --accent:#6aa9ff;
+  --accent2:#2fd0a1;
+  --warn:#ffd36a;
+  --shadow:0 20px 70px rgba(26,52,92,.09);
+  --radius:18px;
+}
+[data-theme="night"]{
+  color-scheme: dark;
   --bg:#0b1220;
   --card:#111a30;
+  --cardSoft:#16213b;
   --line:rgba(255,255,255,.12);
   --text:#e8eefc;
   --muted:#b6c2e2;
+  --topbar:rgba(11,18,32,.78);
+  --soft:rgba(255,255,255,.04);
+  --coverBg:#000;
   --accent:#6aa9ff;
   --accent2:#79ffd2;
-  --warn:#ffd36a;
-  --radius:18px;
+  --shadow:0 18px 60px rgba(0,0,0,.18);
+}
+[data-theme="day"]{
+  color-scheme: light;
 }
 *{box-sizing:border-box}
 body{
@@ -73,7 +97,7 @@ hr.sep{
 /* Top bar + language switcher */
 .topbar{
   position:sticky; top:0; z-index:999;
-  background:rgba(11,18,32,.78);
+  background:var(--topbar);
   backdrop-filter: blur(10px);
   border-bottom:1px solid var(--line);
 }
@@ -95,17 +119,18 @@ hr.sep{
 .brand .name strong{font-size:14px}
 .brand .name span{font-size:12px; color:var(--muted)}
 
-.lang{display:flex; gap:8px; align-items:center}
-.lang button{
+.toolbar{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+.lang,.themeSwitch{display:flex; gap:8px; align-items:center}
+.lang button,.themeSwitch button{
   border:1px solid var(--line);
-  background:rgba(255,255,255,.04);
+  background:var(--soft);
   color:var(--text);
   border-radius:12px;
   padding:8px 10px;
   font-weight:800;
   cursor:pointer;
 }
-.lang button.active{
+.lang button.active,.themeSwitch button.active{
   border-color:transparent;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#071021;
@@ -124,10 +149,11 @@ hr.sep{
   .heroGrid{grid-template-columns:1fr}
 }
 .card{
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  background:linear-gradient(180deg,var(--card),var(--cardSoft));
   border:1px solid var(--line);
   border-radius:var(--radius);
   padding:26px;
+  box-shadow:var(--shadow);
 }
 
 /* Product cards */
@@ -149,7 +175,7 @@ hr.sep{
   border-radius:16px;
   overflow:hidden;
   border:1px solid var(--line);
-  background:#000;
+  background:var(--coverBg);
 }
 
 .productCover img{
@@ -166,7 +192,7 @@ hr.sep{
   width:54px; height:54px;
   border-radius:18px;
   border:1px solid var(--line);
-  background:rgba(255,255,255,.03);
+  background:var(--soft);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -198,7 +224,7 @@ hr.sep{
   padding:14px 16px;
   border:1px solid var(--line);
   border-radius:16px;
-  background:rgba(255,255,255,.03);
+  background:var(--soft);
 }
 .priceLine{
   display:flex;
@@ -246,7 +272,7 @@ footer{
 }
 .kpi .mini{
   border:1px solid var(--line);
-  background:rgba(255,255,255,.03);
+  background:var(--soft);
   border-radius:16px;
   padding:14px 16px;
 }
@@ -267,9 +293,16 @@ footer{
         </div>
       </a>
 
-      <div class="lang" aria-label="Language switcher">
-        <button id="btn-ru" type="button">RU</button>
-        <button id="btn-en" type="button">EN</button>
+      <div class="toolbar">
+        <div class="themeSwitch" aria-label="Theme switcher">
+          <button id="btn-day" type="button" title="Day theme">Day</button>
+          <button id="btn-night" type="button" title="Night theme">Night</button>
+        </div>
+
+        <div class="lang" aria-label="Language switcher">
+          <button id="btn-ru" type="button">RU</button>
+          <button id="btn-en" type="button">EN</button>
+        </div>
       </div>
     </div>
   </div>
@@ -342,6 +375,8 @@ footer{
 (() => {
   const RU = "ru";
   const EN = "en";
+  const DAY = "day";
+  const NIGHT = "night";
 
   // ---- EDIT HERE to add more programs later ----
   const PRODUCTS = [
@@ -544,7 +579,9 @@ footer{
     kpi3b: document.getElementById("kpi3b"),
     cards: document.getElementById("cards"),
     btnRu: document.getElementById("btn-ru"),
-    btnEn: document.getElementById("btn-en")
+    btnEn: document.getElementById("btn-en"),
+    btnDay: document.getElementById("btn-day"),
+    btnNight: document.getElementById("btn-night")
   };
 
   const TEXT = {
@@ -570,6 +607,10 @@ footer{
       kpi2b: "схемы, отчёты, визуализация",
       kpi3a: "Окупаемость",
       kpi3b: "меньше брака, ошибок и ручного труда",
+      themeDay: "День",
+      themeDayTitle: "Дневная тема",
+      themeNight: "Ночь",
+      themeNightTitle: "Ночная тема",
       priceTitle: "Цена",
       demoBtn: "Демо",
       pageBtn: "Страница",
@@ -599,6 +640,10 @@ footer{
       kpi2b: "visuals, reports, clear instructions",
       kpi3a: "ROI-driven",
       kpi3b: "less damage, fewer errors, less manual work",
+      themeDay: "Day",
+      themeDayTitle: "Day theme",
+      themeNight: "Night",
+      themeNightTitle: "Night theme",
       priceTitle: "Pricing",
       demoBtn: "Demo",
       pageBtn: "Page",
@@ -632,6 +677,10 @@ footer{
     ui.kpi2b.textContent = TEXT[lang].kpi2b;
     ui.kpi3a.textContent = TEXT[lang].kpi3a;
     ui.kpi3b.textContent = TEXT[lang].kpi3b;
+    ui.btnDay.textContent = TEXT[lang].themeDay;
+    ui.btnDay.title = TEXT[lang].themeDayTitle;
+    ui.btnNight.textContent = TEXT[lang].themeNight;
+    ui.btnNight.title = TEXT[lang].themeNightTitle;
 
     ui.btnRu.classList.toggle("active", lang === RU);
     ui.btnEn.classList.toggle("active", lang === EN);
@@ -782,6 +831,15 @@ if (p.cover) {
     }
   }
 
+  function applyTheme(theme){
+    const nextTheme = theme === NIGHT ? NIGHT : DAY;
+    document.documentElement.dataset.theme = nextTheme;
+    ui.btnDay.classList.toggle("active", nextTheme === DAY);
+    ui.btnNight.classList.toggle("active", nextTheme === NIGHT);
+
+    try { localStorage.setItem("theme", nextTheme); } catch(e) {}
+  }
+
   function detectInitialLang(){
     const h = (window.location.hash || "").toLowerCase();
     if (h === "#en") return EN;
@@ -796,14 +854,29 @@ if (p.cover) {
     return nav.startsWith("ru") ? RU : EN;
   }
 
+  function detectInitialTheme(){
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === DAY || saved === NIGHT) return saved;
+    } catch(e) {}
+
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return NIGHT;
+    }
+    return DAY;
+  }
+
   ui.btnRu.addEventListener("click", () => showLang(RU));
   ui.btnEn.addEventListener("click", () => showLang(EN));
+  ui.btnDay.addEventListener("click", () => applyTheme(DAY));
+  ui.btnNight.addEventListener("click", () => applyTheme(NIGHT));
   window.addEventListener("hashchange", () => {
     const h = (window.location.hash || "").toLowerCase();
     if (h === "#en") showLang(EN);
     if (h === "#ru") showLang(RU);
   });
 
+  applyTheme(detectInitialTheme());
   showLang(detectInitialLang());
 })();
 </script>
