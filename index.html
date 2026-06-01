@@ -223,10 +223,13 @@ hr.sep{
 /* Product cards */
 .cardsGrid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:18px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
 }
-@media(max-width:900px){
+@media(max-width:1100px){
+  .cardsGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
   .cardsGrid{grid-template-columns:1fr}
 }
 .productCard{
@@ -425,7 +428,7 @@ footer{
       <div class="card" style="margin-top:18px">
         <h3 id="addMoreTitle">Другие программы</h3>
         <p id="addMoreText">
-          
+
         </p>
         <a class="btn secondary" href="mailto:vguberniev@gmail.com" id="btnContactBottom">vguberniev@gmail.com</a>
       </div>
